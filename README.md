@@ -1,189 +1,58 @@
-# MR First Aid Training – Local RAG Prototype
+# MR First Aid Training Agent
 
-🚑 **Goal:**  
-This project explores how to build a **local, offline Retrieval-Augmented Generation (RAG) system** for First Aid training.  
-The long-term vision is an **MR multi-user training environment (Quest 3)** with an **agentic pedagogical assistant** that guides users through **ERC (European Resuscitation Council) guidelines**.
-
-This repo is **Phase 1**:  
-✅ Local RAG pipeline on **Mac M1 Pro**  
-✅ ERC guidelines as knowledge base  
-✅ Local LLM only (no external API calls)  
-✅ Conversational loop with **progression tracking** of resuscitation steps  
+🚑 **Project Idea**  
+This project aims to build a **local, offline intelligent training agent** for **First Aid and resuscitation**.  
+The long-term vision is an **interactive Mixed Reality (MR) environment** (Quest 3, multi-user) where trainees practice according to the **ERC (European Resuscitation Council) guidelines**.  
+A pedagogical agent, powered by **RAG (Retrieval-Augmented Generation)** and **Agentic RAG**, will guide users step by step through resuscitation and adapt to their actions in real time.
 
 ---
 
-## 🚀 Roadmap (Phases)
+## 🌍 Vision
 
-1. **Local RAG baseline (Mac M1 Pro)** ← *this repo*  
-   - Local LLM + embeddings  
-   - ERC guideline ingestion & retrieval  
-   - Conversational loop with state tracking  
+1. **Local & Offline**  
+   - Runs entirely on local hardware (MacBook M1 Pro, later Meta Quest 3).  
+   - No cloud services → private, portable, and resilient.  
 
-2. **Graph-based progression (LangGraph)**  
-   - Model progression of resuscitation steps as a state machine  
-   - Natural language conversation updates progression state  
+2. **Pedagogical Agent**  
+   - Trainees can ask: *“What should I do next?”*  
+   - The agent answers based on ERC guidelines and tracks progression (ambulance called, CPR started, AED used…).  
+   - Later: integrates physiological parameters from a **resuscitation dummy** (blood pressure, compression depth, O₂ saturation) for adaptive feedback.  
 
-3. **Agentic RAG experimentation**  
-   - Tune ERC text (chunking, formatting)  
-   - Test different small, local LLMs  
-   - Evaluate clarity & correctness of outputs  
-
-4. **Standalone deployment on Quest 3**  
-   - Offline pipeline  
-   - Voice input / output  
-
-5. **DummyStation integration**  
-   - Stream vitals (BP, compression depth, O₂, ventilation)  
-   - Agent reacts dynamically  
+3. **Agentic RAG**  
+   - Beyond retrieval: the agent will **decide how to react**, evaluate context, and provide next-step instructions.  
+   - Different configurations (chunking, data formatting, model size) will be tested for clarity and effectiveness.  
 
 ---
 
-## 🛠️ Phase 1 Setup
+## 🛠️ Development Phases
 
-### Requirements
-- macOS (Apple Silicon, M1 Pro or similar)  
-- Python 3.10+  
-- [Ollama](https://ollama.ai) installed locally  
-- Optional: `uv` or `conda` for environment management  
+**Phase 1 – Local RAG baseline (current)**  
+- Run a simple offline RAG system on Mac M1 Pro.  
+- ERC guidelines as knowledge base.  
+- Local LLM only (e.g., Qwen GGUF via `llama-cpp-python`).  
+- Conversational CLI with progression tracking.  
 
-### Installation
-```bash
-# Clone the repo
-git clone https://github.com/yourname/mr-first-aid-rag.git
-cd mr-first-aid-rag
+**Phase 2 – Graph-based progression**  
+- Model the resuscitation process with LangGraph or custom state machine.  
+- Natural language actions update progression state.  
 
-# Setup environment
-python -m venv .venv
-source .venv/bin/activate
+**Phase 3 – Agentic RAG evaluation**  
+- Tune ERC text (cleaning, chunking).  
+- Test small local LLMs for instruction quality.  
+- Benchmark clarity and correctness.  
 
-# Install dependencies
-pip install -r requirements.txt
-````
+**Phase 4 – Standalone Quest 3 deployment**  
+- Fully local execution on-device.  
+- Voice input and agent speech output in MR.  
 
-### Models
-
-Pull a small local LLM (fast & lightweight):
-
-```bash
-ollama pull llama3.1:8b-instruct-q4_K_M
-```
-
-Optional embeddings model (runs locally via sentence-transformers or nomic):
-
-* `nomic-embed-text`
-* `bge-small-en`
-* `gte-small`
-
----
-
-## 📚 Data
-
-* ERC Guidelines (PDF/text provided locally by user)
-* Ingested into vector store (`/data/indexes/erc_v1`)
-
-Scripts:
-
-```bash
-python scripts/build_index.py
-```
-
----
-
-## 💬 Run the CLI Prototype
-
-Start the chat:
-
-```bash
-python src/app/main.py
-```
-
-Example session:
-
-```
-> What do I do next?
-Agent: Please call an ambulance immediately. [ERC §Basic Life Support]
-State updated: {"called_ambulance": true}
-```
-
-Commands:
-
-* `/state` → show current resuscitation progress
-* `/reset` → clear state
-* `/undo` → revert last action
-* `/trace` → debug retrieved context
-
----
-
-## 📊 Progression Tracking
-
-The system keeps a minimal state:
-
-```json
-{
-  "checked_responsiveness": false,
-  "called_ambulance": false,
-  "started_cpr": false,
-  "aed_requested": false,
-  "airway_checked": false
-}
-```
-
-* State is updated automatically based on conversation
-* In Phase 1, only **conversation → state** mapping is implemented
-* In later phases, **dummy monitoring values** will also update state
-
----
-
-## 🧪 Evaluation (Phase 1)
-
-* Small scenario set (`/tests/scenarios.jsonl`) with typical training questions
-* Logs retrieved chunks, answers, and state updates
-* Manual pass/fail evaluation of clarity & ERC correctness
-
----
-
-## 📂 Repo Structure
-
-```
-/src/app/
-  main.py         # CLI chat entry
-  rag.py          # Retriever + RAG chain
-  state.py        # State schema & reducer
-  prompts.py      # Prompt templates
-  models.py       # LLM & embeddings adapters
-  config.py       # Settings
-
-/scripts/
-  build_index.py  # ERC ingestion & vector store builder
-
-/data/
-  erc/            # ERC guideline source text
-  indexes/        # FAISS/Chroma indexes
-
-/tests/
-  test_state.py   # Unit tests for state handling
-  scenarios.jsonl # Evaluation scenarios
-```
+**Phase 5 – DummyStation integration**  
+- Stream real-time parameters from a resuscitation dummy.  
+- Agent adapts dynamically (e.g., compression depth too shallow → corrective feedback).  
 
 ---
 
 ## ⚠️ Disclaimer
 
-This project is **for training and research purposes only**.
-It does **not replace certified medical training** or real emergency protocols.
-Always follow official ERC guidelines and seek certified instruction.
-
----
-
-## 📅 Next Steps
-
-* [ ] Finish ingestion pipeline for ERC guidelines
-* [ ] Implement minimal RAG chain with local LLM
-* [ ] Add progression state updates from conversation
-* [ ] Build evaluation set for Phase 1
-* [ ] Prepare migration to LangGraph for Phase 2
-
----
-
-```
-
+This project is **for training and research purposes only**.  
+It does **not replace certified medical training** or real emergency protocols.  
+Always follow official ERC guidelines and seek certified instruction.  
