@@ -1,0 +1,1 @@
+# minimal testing: chunking, index round-trip, pipeline smoke test

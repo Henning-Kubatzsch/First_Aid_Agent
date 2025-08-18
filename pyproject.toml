@@ -14,7 +14,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.10, <3.14"
 
 # --- Core runtime deps (lean) ---
 PyYAML = "^6.0"
@@ -27,6 +27,8 @@ langchain-community = "^0.2.0"
 sentence-transformers = "^3.0.0"
 huggingface-hub = "^0.23.0"
 llama-cpp-python = { version = "^0.2.90", markers = "platform_system == 'Darwin'" }
+torch = "^2.8"
+accelerate = "^1.10"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
