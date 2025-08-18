@@ -1,5 +1,8 @@
 # MR First Aid Training Agent
 
+![alt text](image.png)
+
+
 🚑 **Project Idea**  
 This project aims to build a **local, offline intelligent training agent** for **First Aid and resuscitation**.  
 The long-term vision is an **interactive Mixed Reality (MR) environment** (Quest 3, multi-user) where trainees practice according to the **ERC (European Resuscitation Council) guidelines**.  
