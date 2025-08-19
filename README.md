@@ -60,6 +60,11 @@ This project is **for training and research purposes only**.
 It does **not replace certified medical training** or real emergency protocols.  
 Always follow official ERC guidelines and seek certified instruction.  
 
+### Legal Notice
+This project uses **paraphrased and simplified summaries** inspired by the recommendations of the **European Resuscitation Council (ERC)**.  
+It does **not include or redistribute official ERC guideline texts**.  
+For authoritative and up-to-date information, consult the official ERC publications at [https://erc.edu](https://erc.edu).
+
 ---
 
 📦 Third-Party Licenses

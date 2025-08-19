@@ -1,79 +1,87 @@
-## Concise guideline for clinical practice
+# First Aid & Resuscitation – Simplified Training Guidelines
 
-### How to recognise cardiac arrest  
+## Recognising Cardiac Arrest
 
-- Start CPR in any unresponsive person with absent or abnormal breathing.  
-- Slow, laboured breathing (agonal breathing) should be considered a sign of cardiac arrest. 
-- A short period of seizure-like movements can occur at the start of cardiac arrest. Assess the person after the seizure has stopped: if unresponsive and with absent or abnormal breathing, start CPR.
+* If a person is **unresponsive** and has **no normal breathing**, start CPR immediately.
+* **Abnormal breathing** (e.g., slow, gasping breaths / agonal respiration) is a strong indicator of cardiac arrest.
+* At the onset, brief **seizure-like movements** may occur. After they stop: if the person is still unresponsive and not breathing normally → begin CPR.
 
-### How to alert the emergency services  
+## Calling Emergency Services
 
-- Alert the emergency medical services (EMS) immediately if a person is unconscious with absent or abnormal breathing. 
-- A lone bystander with a mobile phone should dial the EMS number, activate the speaker or another hands-free option on the mobile phone and immediately start CPR assisted by the dispatcher.  If you are a lone rescuer and you have to leave a victim to alert the EMS, activate the EMS first and then start CPR.
+* If someone is unresponsive and not breathing normally → **call emergency services right away**.
+* A lone rescuer with a mobile phone should dial the emergency number, activate speaker mode, and start CPR while following dispatcher guidance.
+* If you must leave to make the call, **activate EMS first, then begin CPR**.
 
-### High quality chest compressions  
+## High-Quality Chest Compressions
 
-- Start chest compressions as soon as possible.  
-- Deliver compressions on the lower half of the sternum (‘in the centre of the chest’). 
-- Compress to a depth of at least 5 cm but not more than 6 cm. Compress the chest at a rate of 100 - 120 per minute with as few interruptions as possible.  
-- Allow the chest to recoil completely after each compression; do not lean on the chest. 
-- Perform chest compressions on a firm surface whenever feasible.
+* **Start compressions as soon as possible**.
+* Place hands on the lower half of the breastbone (middle of the chest).
+* Push down **5–6 cm deep** at a rate of **100–120 per minute**, minimizing interruptions.
+* Allow the chest to fully recoil after each compression.
+* Perform compressions on a firm surface if available.
 
-### Rescue breaths  
+## Rescue Breaths
 
-- Alternate between providing 30 compressions and 2 rescue breaths.  
-- If you are unable to provide ventilations, give continuous chest compressions.
-  
-### AED How to find an AED  
+* Standard cycle: **30 compressions, then 2 breaths**.
+* If unable or unwilling to give breaths → continue with **compressions only**.
 
-- The location of an AED should be indicated by clear signage.
+## Finding an AED
 
-### When and how to use an AED  
+* AED locations should be **clearly marked with signs**.
 
-- As soon as the AED arrives, or if one is already available at the site of the cardiac arrest, switch it on.  
-- Attach the electrode pads to the victim's bare chest according to the position shown on the AED or on the pads.  
-- If more than one rescuer is present, continue CPR whilst the pads are being attached.  Follow the spoken (and/or visual) prompts from the AED.  
-- Ensure that nobody is touching the victim whilst the AED is analysing the heart rhythm.  
-  If a shock is indicated, ensure that nobody is touching the victim. 
-- Push the shock button as prompted. Immediately restart CPR with 30 compressions.  
-- If no shock is indicated, immediately restart CPR with 30 compressions.  
-- In either case, continue with CPR as prompted by the AED. There will be a period of CPR (commonly 2 min) before the AED prompts for a further pause in CPR for rhythm analysis.
-  
-### Compressions before defibrillation  
+## Using an AED
 
-- Continue CPR until an AED (or other defibrillator) arrives on site and is switched on and attached to the victim.  
-- Do not delay defibrillation to provide additional CPR once the defibrillator is ready.
-  
-  
-### Fully automatic AEDs  
+* As soon as an AED is available → **switch it on**.
+* Attach electrode pads to the bare chest as shown on the device.
+* If more than one rescuer is present, CPR should continue while pads are applied.
+* Follow the device’s **audio and visual prompts**.
+* Ensure **no one touches the patient** during rhythm analysis or shock delivery.
+* If a shock is advised → press the shock button (or allow the device to deliver automatically). Immediately restart CPR with 30 compressions.
+* If no shock is advised → immediately restart CPR.
+* Continue CPR until the AED instructs another rhythm check (usually every 2 minutes).
 
-- If a shock is indicated, fully automatic AEDs are designed to deliver a shock without any further action by the rescuer. The safety of fully automatic AEDs have not been well studied.
+## Compressions Before Defibrillation
 
-### Safety of AEDs  
+* Continue CPR until the AED/defibrillator is connected and ready.
+* Once the defibrillator is prepared, **do not delay the shock**.
 
-- Many studies of public access defibrillation have shown that AEDs can be used safely by bystanders and first responders. Although injury to the CPR provider from a shock by a defibrillator is extremely rare, do not continue chest compression during shock delivery.
+## Fully Automatic AEDs
 
-### Safety  
+* Some AEDs deliver shocks without rescuer input.
+* These devices are considered safe, though large-scale safety data is limited.
 
-- Make sure you, the victim and any bystanders are safe.  
-- Laypeople should initiate CPR for presumed cardiac arrest without concerns of harm to victims not in cardiac arrest.  
-- Lay people may safely perform chest compressions and use an AED as the risk of infection during compressions and harm from accidental shock during AED use is very low.
+## AED Safety
 
-### How technology can help  
+* Studies show AEDs are safe for bystander use.
+* The risk of shock to a rescuer is extremely low, but **compressions must stop during shock delivery**.
 
-- EMS systems should consider the use of technology such as smartphones, video communication, artificial intelligence and drones to assist in recognising cardiac arrest, to dispatch first responders, to communicate with bystanders to provide dispatcher-assisted CPR and to deliver AEDs to the site of cardiac arrest.
+## General Safety
 
-### Foreign body airway obstruction  
+* Always ensure the environment is safe for you, the patient, and others.
+* Lay rescuers should not hesitate: performing CPR on someone **not in arrest rarely causes harm**.
+* Risks of infection or accidental shock are very low.
 
-- Suspect choking if someone is suddenly unable to speak or talk, particularly if eating.
-- Encourage the victim to cough.  
-- If the cough becomes ineffective, give up to 5 back blows: 
-	- Lean the victim forwards. 
-	- Apply blows between the shoulder blades using the heel of one hand  
-- If back blows are ineffective, give up to 5 abdominal thrusts: 
-	- Stand behind the victim and put both your arms around the upper part of the victim's abdomen. 
-	- Lean the victim forwards. 
-	- Clench your fist and place it between the umbilicus (navel) and the ribcage. 
-	- Grasp your fist with the other hand and pull sharply inwards and upwards.  
-- If choking has not been relieved after 5 abdominal thrusts, continue alternating 5 back blows with 5 abdominal thrusts until it is relieved, or the victim becomes unconscious. 
-- If the victim becomes unconscious, start CPR
+## Technology Support
+
+* Emergency systems may use **smartphones, video calls, AI, or drones** to help identify cardiac arrest, provide dispatcher-guided CPR, alert nearby responders, or deliver AEDs to the scene.
+
+## Airway Obstruction (Choking)
+
+* Suspect choking if someone suddenly cannot talk or breathe, often while eating.
+* Encourage them to **cough forcefully**.
+* If ineffective: deliver up to **5 back blows** between the shoulder blades.
+* If still obstructed: give up to **5 abdominal thrusts (Heimlich manoeuvre)**:
+
+  * Stand behind the person, wrap arms around the upper abdomen.
+  * Place a fist between the navel and ribs, grasp it with the other hand.
+  * Pull sharply inward and upward.
+* Alternate between 5 back blows and 5 abdominal thrusts until the blockage clears or the person becomes unconscious.
+* If they collapse → **start CPR immediately**.
+
+---
+
+### ⚠️ Legal Notice
+
+This is a **paraphrased, simplified summary** inspired by the recommendations of the **European Resuscitation Council (ERC)**.
+It is provided for **training and research purposes only** and does **not** replace official guidelines or certified medical training.
+For the full and authoritative guidance, see: [https://erc.edu](https://erc.edu).
