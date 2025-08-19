@@ -59,3 +59,9 @@ A pedagogical agent, powered by **RAG (Retrieval-Augmented Generation)** and **A
 This project is **for training and research purposes only**.  
 It does **not replace certified medical training** or real emergency protocols.  
 Always follow official ERC guidelines and seek certified instruction.  
+
+---
+
+📦 Third-Party Licenses
+This project depends on several open-source libraries (MIT, Apache-2.0, BSD-3-Clause, PSF).  
+For details, see [THIRD_PARTY_LICENSES.md](./THIRD_PARTY_LICENSES.md).
