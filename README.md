@@ -1,7 +1,6 @@
 # MR First Aid Training Agent
 
-![alt text](image.png)
-
+![alt text](<ChatGPT Image 19. Aug. 2025, 16_24_51.png>)
 
 🚑 **Project Idea**  
 This project aims to build a **local, offline intelligent training agent** for **First Aid and resuscitation**.  
