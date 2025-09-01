@@ -1,19 +1,33 @@
-# Wrap llama_cpp.Llama; builds prompt + generates test (temperature, max_tokens)
+# src/rag/generator.py
+"""
+Local LLM wrapper (llama-cpp) that conforms to our public interfaces.
+
+- Defines an abstract ChatModel Protocol (interface)
+- Implements LocalLLM that satisfies ChatModel
+- Keeps YAML-driven config loading
+- Provides both streaming and non-streaming chat calls
+"""
 
 from __future__ import annotations
 
 import os
-from typing import Dict, List, Iterable, Optional, Any
 from dataclasses import dataclass
+from typing import Any, Dict, Iterable, List, Optional
 
 import yaml
 from llama_cpp import Llama
 
-# ---- 1) Small dataclass to hold LLM config ----
+from rag.interfaces import ChatModel
+
+
+# =========================
+# Config model
+# =========================
+
 @dataclass
 class LLMConfig:
     model_path: str
-    family: str = "qwen2"                # qwen2 | llama3 | phi3 | mistral
+    family: str = "qwen"          # qwen | qwen2 | qwen2.5 | llama3 | phi3 | mistral
     n_ctx: int = 4096
     n_gpu_layers: int = -1
     n_threads: Optional[int] = None
@@ -23,30 +37,50 @@ class LLMConfig:
     repeat_penalty: float = 1.1
     max_tokens: int = 512
     stop: Optional[List[str]] = None
+    # Optional perf knobs (kept optional to avoid breaking configs)
+    n_batch: Optional[int] = None
+    use_mmap: Optional[bool] = None
+    use_mlock: Optional[bool] = None
 
-# ---- 2) Load YAML and extract LLM config ----
+
 def load_llm_config(path: str) -> LLMConfig:
+    """Read YAML and construct LLMConfig."""
     with open(path, "r", encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)                     # cfg: python dictionary
-    llm_cfg = cfg.get("llm", {})                    # get key "llm" from the dictionary
+        cfg = yaml.safe_load(f)
+    llm_cfg = cfg.get("llm", {})
     return LLMConfig(**llm_cfg)
 
-# ---- 3) Map "family" to llama.cpp chat_format + default stop tokens ----
+
+# =========================
+# Helpers
+# =========================
+
 def family_to_chat_format_and_stops(family: str) -> Dict[str, Any]:
-    family = family.lower()                         # converts all chars to lowercase
-    if family in ("qwen", "qwen2", "qwen2.5"):
-        return {"chat_format": "qwen2", "extra_stops": ["<|im_end|>", "<|endoftext|>"]}
-    if family in ("llama3", "llama-3"):
+    """
+    Map a 'family' string to llama.cpp chat_format + default stop tokens.
+    Keep names aligned with llama.cpp's built-ins.
+    """
+    f = family.lower()
+    if f in ("qwen", "qwen2", "qwen2.5"):
+        # If your GGUF is Qwen2.x, "qwen2" chat_format also works.
+        return {"chat_format": "qwen", "extra_stops": ["<|im_end|>", "<|endoftext|>"]}
+    if f in ("llama3", "llama-3"):
         return {"chat_format": "llama-3", "extra_stops": ["<|eot_id|>", "<|end_of_text|>"]}
-    if family in ("phi3", "phi-3", "phi3-mini"):
+    if f in ("phi3", "phi-3", "phi3-mini"):
         return {"chat_format": "phi3", "extra_stops": ["<|end|>", "<|endoftext|>"]}
-    if family in ("mistral", "mistral-instruct"):
+    if f in ("mistral", "mistral-instruct"):
         return {"chat_format": "mistral-instruct", "extra_stops": ["</s>"]}
-    # fallback: raw completion mode (not recommended)
+    # Fallback: raw completion (not recommended)
     return {"chat_format": None, "extra_stops": []}
 
-# ---- 4) The LocalLLM class: constructs the llama and runs chat ----
-class LocalLLM:
+
+# =========================
+# Implementation
+# =========================
+
+class LocalLLM(ChatModel):
+    """llama.cpp-backed chat model implementing the ChatModel interface."""
+
     def __init__(self, cfg: LLMConfig):
         assert os.path.exists(cfg.model_path), f"Model not found: {cfg.model_path}"
         mapping = family_to_chat_format_and_stops(cfg.family)
@@ -56,29 +90,41 @@ class LocalLLM:
         if cfg.stop:
             stops.extend(s for s in cfg.stop if s not in stops)
 
-        # llama.cpp model handle (loads weights into RAM; Metal offload if enabled)
-        self.llama = Llama(
+        llama_kwargs: Dict[str, Any] = dict(
             model_path=cfg.model_path,
             n_ctx=cfg.n_ctx,
             n_threads=cfg.n_threads or os.cpu_count(),
-            n_gpu_layers=cfg.n_gpu_layers,          # -1 = try to offload all layers to GPU (Metal)
+            n_gpu_layers=cfg.n_gpu_layers,     # -1 = try offloading all to GPU (Metal)
             seed=cfg.seed,
-            logits_all=False,                       # saves memory; we only need final tokens
-            verbose=False,                          # log all llama.cpp infos (Layer, Offload, Tokenization ...)
-            chat_format=mapping["chat_format"],     # selects the built-in chat template
+            logits_all=False,                  # reduce memory
+            verbose=False,
+            chat_format=mapping["chat_format"],
         )
+        # Optional perf knobs if provided in config
+        if cfg.n_batch is not None:
+            llama_kwargs["n_batch"] = cfg.n_batch
+        if cfg.use_mmap is not None:
+            llama_kwargs["use_mmap"] = cfg.use_mmap
+        if cfg.use_mlock is not None:
+            llama_kwargs["use_mlock"] = cfg.use_mlock
 
+        self.llama = Llama(**llama_kwargs)
         self.cfg = cfg
         self.stop = stops
         self.chat_format = mapping["chat_format"]
 
-    # Build messages in OpenAI-style schema so llama.cpp can format them
+    # ----- ChatModel interface -----
+
     def make_messages(
         self,
         user: str,
         system: Optional[str] = None,
         history: Optional[List[Dict[str, str]]] = None,
     ) -> List[Dict[str, str]]:
+        """
+        Build OpenAI-style messages. llama.cpp will apply the proper chat template
+        for the selected family (via chat_format).
+        """
         messages: List[Dict[str, str]] = []
         if system:
             messages.append({"role": "system", "content": system})
@@ -87,32 +133,6 @@ class LocalLLM:
         messages.append({"role": "user", "content": user})
         return messages
 
-    # Streaming generator: yields tokens as they arrive
-    def chat_stream(
-        self,
-        messages: List[Dict[str, str]],
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        max_tokens: Optional[int] = None,
-    ) -> Iterable[str]:
-        params = dict(
-            temperature=temperature if temperature is not None else self.cfg.temperature,
-            top_p=top_p if top_p is not None else self.cfg.top_p,
-            max_tokens=max_tokens if max_tokens is not None else self.cfg.max_tokens,
-            repeat_penalty=self.cfg.repeat_penalty,
-            stop=self.stop,
-            stream=True,  # <-- important
-        )
-
-        # llama.cpp auto-applies the correct prompt template if chat_format is set
-        stream = self.llama.create_chat_completion(messages=messages, **params)
-        for part in stream:
-            # The event stream yields incremental deltas
-            delta = part["choices"][0]["delta"].get("content", "")
-            if delta:
-                yield delta
-
-    # Non-streaming call: returns the full string at once
     def chat(
         self,
         messages: List[Dict[str, str]],
@@ -121,9 +141,9 @@ class LocalLLM:
         max_tokens: Optional[int] = None,
     ) -> str:
         params = dict(
-            temperature=temperature if temperature is not None else self.cfg.temperature,
-            top_p=top_p if top_p is not None else self.cfg.top_p,
-            max_tokens=max_tokens if max_tokens is not None else self.cfg.max_tokens,
+            temperature=self.cfg.temperature if temperature is None else temperature,
+            top_p=self.cfg.top_p if top_p is None else top_p,
+            max_tokens=self.cfg.max_tokens if max_tokens is None else max_tokens,
             repeat_penalty=self.cfg.repeat_penalty,
             stop=self.stop,
             stream=False,
@@ -131,9 +151,41 @@ class LocalLLM:
         out = self.llama.create_chat_completion(messages=messages, **params)
         return out["choices"][0]["message"]["content"]
 
-# ---- 5) Convenience helpers for your pipeline ----
+    def chat_stream(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+    ) -> Iterable[str]:
+        params = dict(
+            temperature=self.cfg.temperature if temperature is None else temperature,
+            top_p=self.cfg.top_p if top_p is None else top_p,
+            max_tokens=self.cfg.max_tokens if max_tokens is None else max_tokens,
+            repeat_penalty=self.cfg.repeat_penalty,
+            stop=self.stop,
+            stream=True,
+        )
+        stream = self.llama.create_chat_completion(messages=messages, **params)
+        for part in stream:
+            delta = part["choices"][0]["delta"].get("content", "")
+            if delta:
+                yield delta
+
+
+# =========================
+# Convenience helper
+# =========================
+
 def simple_answer(question: str, system: Optional[str], cfg_path: str) -> str:
+    """
+    Minimal convenience function to:
+    - load config
+    - build a LocalLLM (ChatModel)
+    - format messages
+    - return a single-shot answer
+    """
     cfg = load_llm_config(cfg_path)
-    llm = LocalLLM(cfg)
+    llm: ChatModel = LocalLLM(cfg)
     messages = llm.make_messages(user=question, system=system)
     return llm.chat(messages)
