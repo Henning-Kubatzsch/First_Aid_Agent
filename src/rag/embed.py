@@ -13,6 +13,7 @@ class SBertEmbeddings(Embedder):
     - 'sentence-transformers/all-MiniLM-L6-v2' (384d)
     - 'nomic-ai/nomic-embed-text-v1.5' (768d, may require extra install)
     """
+    
     def __init__(self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2", device: str = "cpu"):
         self.model = SentenceTransformer(model_name, device=device)
 

@@ -29,7 +29,10 @@ torch = "^2.8"
 accelerate = "^1.10"
 llama-cpp-python = "0.2.90"
 click = "8.1.7"
-typer = "0.12.3"
+typer = "0.15.1"
+fastapi = "^0.116.1"
+uvicorn = "^0.35.0"
+fastapi-cli = "^0.0.10"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"

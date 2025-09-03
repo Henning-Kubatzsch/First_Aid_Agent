@@ -29,6 +29,9 @@ def build_erc_index(
     chunker = ParagraphChunker(target_chars=target_chars)
     embedder = SBertEmbeddings(model_name=model_name)
     dim_probe = len(embedder.embed_one("probe"))
+
+    print(dim_probe)
+    
     index = HnswIndex()
     index.build(dim=dim_probe, space="cosine")
 
