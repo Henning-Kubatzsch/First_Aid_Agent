@@ -1,6 +1,6 @@
 # src/rag/interfaces.py
 from __future__ import annotations
-from typing import Dict, List, Iterable, Optional, Protocol
+from typing import Dict, List, Iterable, Optional, Protocol, Any
 
 
 # Protocol:
@@ -35,3 +35,27 @@ class ChatModel(Protocol):
         max_tokens: Optional[int] = None,
     ) -> Iterable[str]:
         ...
+
+
+# Already have ChatModel; adding the rest:
+
+class Chunker(Protocol):
+    def split(self, text: str, meta: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+        """Return a list of chunks: [{'id': str, 'text': str, 'meta': {...}}]."""
+        ...
+
+class Embedder(Protocol):
+    def embed(self, texts: List[str]) -> List[List[float]]:
+        """Return list of vectors; len == len(texts)."""
+        ...
+    def embed_one(self, text: str) -> List[float]:
+        ...
+
+class VectorIndex(Protocol):
+    def build(self, dim: int, space: str = "cosine") -> None: ...
+    def upsert(self, vectors: List[List[float]], metas: List[Dict[str, Any]]) -> None: ...
+    def query(self, vector: List[float], k: int = 5) -> List[Dict[str, Any]]:
+        """Return docs with distances: [{'text': ..., 'meta': {...}, 'score': float}]"""
+        ... 
+    def save(self, path: str) -> None: ...
+    def load(self, path: str) -> None: ...

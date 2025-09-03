@@ -53,6 +53,17 @@ A pedagogical agent, powered by **RAG (Retrieval-Augmented Generation)** and **A
 
 ---
 
+## Work sith the model
+
+| how to call | what you get |
+| - | - |
+| poetry run rag llm-stream "question" | streamed no RAG |
+| poetry run rag ask "question" | non streamed no RAG with 'help' |
+| poetry run rag llm-sanity "question"| non streamed no RAG no 'help'|
+
+
+---
+
 ## ⚠️ Disclaimer
 
 This project is **for training and research purposes only**.  

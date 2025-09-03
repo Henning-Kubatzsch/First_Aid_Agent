@@ -1,36 +1,36 @@
 # First Aid & Resuscitation – Simplified Training Guidelines
 
-## Recognising Cardiac Arrest
 
+## Recognising Cardiac Arrest
 * If a person is **unresponsive** and has **no normal breathing**, start CPR immediately.
 * **Abnormal breathing** (e.g., slow, gasping breaths / agonal respiration) is a strong indicator of cardiac arrest.
 * At the onset, brief **seizure-like movements** may occur. After they stop: if the person is still unresponsive and not breathing normally → begin CPR.
 
-## Calling Emergency Services
 
+## Calling Emergency Services
 * If someone is unresponsive and not breathing normally → **call emergency services right away**.
 * A lone rescuer with a mobile phone should dial the emergency number, activate speaker mode, and start CPR while following dispatcher guidance.
 * If you must leave to make the call, **activate EMS first, then begin CPR**.
 
-## High-Quality Chest Compressions
 
+## High-Quality Chest Compressions
 * **Start compressions as soon as possible**.
 * Place hands on the lower half of the breastbone (middle of the chest).
 * Push down **5–6 cm deep** at a rate of **100–120 per minute**, minimizing interruptions.
 * Allow the chest to fully recoil after each compression.
 * Perform compressions on a firm surface if available.
 
-## Rescue Breaths
 
+## Rescue Breaths
 * Standard cycle: **30 compressions, then 2 breaths**.
 * If unable or unwilling to give breaths → continue with **compressions only**.
 
-## Finding an AED
 
+## Finding an AED
 * AED locations should be **clearly marked with signs**.
 
-## Using an AED
 
+## Using an AED
 * As soon as an AED is available → **switch it on**.
 * Attach electrode pads to the bare chest as shown on the device.
 * If more than one rescuer is present, CPR should continue while pads are applied.
@@ -40,33 +40,33 @@
 * If no shock is advised → immediately restart CPR.
 * Continue CPR until the AED instructs another rhythm check (usually every 2 minutes).
 
-## Compressions Before Defibrillation
 
+## Compressions Before Defibrillation
 * Continue CPR until the AED/defibrillator is connected and ready.
 * Once the defibrillator is prepared, **do not delay the shock**.
 
-## Fully Automatic AEDs
 
+## Fully Automatic AEDs
 * Some AEDs deliver shocks without rescuer input.
 * These devices are considered safe, though large-scale safety data is limited.
 
-## AED Safety
 
+## AED Safety
 * Studies show AEDs are safe for bystander use.
 * The risk of shock to a rescuer is extremely low, but **compressions must stop during shock delivery**.
 
-## General Safety
 
+## General Safety
 * Always ensure the environment is safe for you, the patient, and others.
 * Lay rescuers should not hesitate: performing CPR on someone **not in arrest rarely causes harm**.
 * Risks of infection or accidental shock are very low.
 
-## Technology Support
 
+## Technology Support
 * Emergency systems may use **smartphones, video calls, AI, or drones** to help identify cardiac arrest, provide dispatcher-guided CPR, alert nearby responders, or deliver AEDs to the scene.
 
-## Airway Obstruction (Choking)
 
+## Airway Obstruction (Choking)
 * Suspect choking if someone suddenly cannot talk or breathe, often while eating.
 * Encourage them to **cough forcefully**.
 * If ineffective: deliver up to **5 back blows** between the shoulder blades.
@@ -78,6 +78,7 @@
 * Alternate between 5 back blows and 5 abdominal thrusts until the blockage clears or the person becomes unconscious.
 * If they collapse → **start CPR immediately**.
 
+
 ---
 
 ### ⚠️ Legal Notice
@@ -85,3 +86,5 @@
 This is a **paraphrased, simplified summary** inspired by the recommendations of the **European Resuscitation Council (ERC)**.
 It is provided for **training and research purposes only** and does **not** replace official guidelines or certified medical training.
 For the full and authoritative guidance, see: [https://erc.edu](https://erc.edu).
+
+
