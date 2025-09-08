@@ -138,11 +138,12 @@ def llm_stream(
         print(tok, end="", flush=True)
     
     
-# ======================
-# Direct commands to LLM
-# ======================
+# ======================================
+# Direct commands to LLM -> no retrieval
+# ======================================
 
-@app.command("ask-simple")
+# using simple_answer creates model each time
+@app.command("ask-no-retrieval")
 def ask(
     question: str = typer.Argument(..., help="Prompt to send to the local LLM"),
     config: str = typer.Option("configs/rag.yaml", "--config", "-c"),
@@ -152,7 +153,8 @@ def ask(
     out = simple_answer(question, system, config)
     typer.echo(out)
 
-@app.command("llm-sanity")
+# using simple_answer creates model each time
+@app.command("llm-sanity-no-retrieval")
 def llm_sanity(
     question: str = typer.Argument(...),
     config: str = typer.Option("configs/rag.yaml", "--config", "-c"),
@@ -162,7 +164,9 @@ def llm_sanity(
     out = simple_answer(question, system, config)
     typer.echo(out)
 
-@app.command("llm-stream-simple")
+
+# create model then stream tokens to stdout
+@app.command("llm-stream-no-retrieval")
 def llm_stream_simple(
     question: str = typer.Argument(...),
     config: str = typer.Option("configs/rag.yaml", "--config", "-c"),
