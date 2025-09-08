@@ -15,7 +15,7 @@ app = typer.Typer(help="RAG CLI")
 
 @app.command("ingest")
 def ingest(
-    docs_dir: str = typer.Option("data/docs", "--docs", help="Folder with ERC .txt/.md"),
+    docs_dir: str = typer.Option("data/docs/en", "--docs", help="Folder with ERC .txt/.md"),
     out_dir: str  = typer.Option("data/index", "--out", help="Where to store HNSW index"),
     embed_model: str = typer.Option("sentence-transformers/all-MiniLM-L6-v2", "--embed-model"),
 ):
@@ -57,7 +57,7 @@ def ask(
     t0 = time.perf_counter()    
 
 
-    # print(docs)
+    print(docs)
 
     # 4) Build prompt with context and ask LLM
     context = "\n\n".join(f"[{i+1}] {d['text']}" for i, d in enumerate(docs))
@@ -72,7 +72,7 @@ def ask(
     msgs = llm.make_messages(user=user, system=system)
     answer = llm.chat(msgs, max_tokens=llm_cfg.max_tokens)
 
-    print(f"--- LLM response in {time.perf_counter() - t0:.2f} seconds")
+    print(f"---- LLM response in {time.perf_counter() - t0:.2f} seconds")
 
     print(answer)
 
@@ -119,7 +119,11 @@ def llm_stream(
 
     # 4) Build prompt with context and ask LLM
     context = "\n\n".join(f"[{i+1}] {d['text']}" for i, d in enumerate(docs))
-    system = "You are a concise, ERC-aligned training assistant. Answer with short, safe, step-by-step instructions and cite [1], [2] as needed."
+    # system = "You are a concise, ERC-aligned training assistant. Answer with short, safe, step-by-step instructions."
+    # system = "You are a concise, ERC-aligned training assistant. Answer the users question given the context provided."
+    # system = "Du bist ein knapper, ERC-konformer Erste-Hilfe-Microcoach. Antworte in 1–2 kurzen Sätzen in Alltagssprache. Gib genau EINE konkrete Handlung, keine Aufzählungen, keine Überschriften, keine Zitate/Quellen/Links. Bei Lebensgefahr beginne mit „Notfall:“ und nenne zuerst den wichtigsten Schritt. Keine Diagnosen, keine Medikamentenhinweise. Beende JEDE Antwort exakt mit: „Wenn du das gemacht hast, sag Bescheid — ich gebe dir den nächsten Schritt."
+    system = "give short answers"
+
     user = f"Context:\n{context}\n\nQuestion:\n{question}"
 
     print(f"---- Prompt built in {time.perf_counter() - t0:.2f} seconds")
