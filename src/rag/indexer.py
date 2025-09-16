@@ -1,3 +1,4 @@
+# /src/rag/indexer.py
 # Build/save/load HNSW index; controls M/efConstruction/efSaerch
 
 from __future__ import annotations

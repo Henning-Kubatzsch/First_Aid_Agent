@@ -12,7 +12,6 @@ class ParagraphChunker(Chunker):
     - Splits on blank lines (paragraphs)
     - Merges paragraphs until target_chars (but ensures >= min_chars)
     - Adds character overlap *between* emitted chunks (never before the first)
-
     """
 
     ## def __init__(self, target_chars: int = 1200, min_chars: int = 400, overlap_chars: int = 120):
@@ -23,9 +22,9 @@ class ParagraphChunker(Chunker):
 
     def _norm(self, txt: str) -> str:
         txt = txt.replace("\r", "")
-        # collapse multiple blank blocks to a single blank line
-        txt = re.sub(r"\n{2,}", "\n\n", txt)
+        txt = re.sub(r'\n{2,}', '\n\n', txt)
         return txt.strip()
+
 
     def split(self, text: str, meta: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         meta = meta or {}

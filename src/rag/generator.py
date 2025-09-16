@@ -134,6 +134,7 @@ class LocalLLM(ChatModel):
         messages.append({"role": "user", "content": user})
         return messages
 
+     
     def chat(
         self,
         messages: List[Dict[str, str]],
@@ -150,7 +151,27 @@ class LocalLLM(ChatModel):
             stream=False,
         )
         out = self.llama.create_chat_completion(messages=messages, **params)
-        return out["choices"][0]["message"]["content"]
+
+        # Case 1: non-streaming API returns a dict
+        if isinstance(out, dict):
+            return out["choices"][0]["message"]["content"]
+
+        # Case 2: defensive fallback – API returned a generator/iterator even with stream=False
+        parts: List[str] = []
+        for chunk in out:
+            choice = chunk["choices"][0]
+            # some backends use "delta", others place full message payload
+            content = ""
+            if "delta" in choice:
+                content = choice["delta"].get("content", "") or ""
+            elif "message" in choice:
+                content = choice["message"].get("content", "") or ""
+            else:
+                content = choice.get("text", "") or ""
+            if content:
+                parts.append(content)
+        return "".join(parts)
+
 
     def chat_stream(
         self,
