@@ -6,11 +6,12 @@ build-backend = "poetry.core.masonry.api"
 name = "mr-first-aid-rag"
 version = "0.1.0"
 description = "Local, offline RAG prototype for First Aid training (ERC) with conversational progression."
-authors = ["Meister <you@example.com>"]
+authors = ["Henning Kubatzsch <henningkb@outlook.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-  { include = "rag", from = "src" }
+  { include = "rag", from = "src" },
+  { include = "scripts" }
 ]
 
 [tool.poetry.dependencies]
@@ -21,8 +22,8 @@ PyYAML = "^6.0"
 numpy = ">=1.26,<3.0"
 pydantic = "^2.6.0"
 hnswlib = "^0.8.0"
-langchain = "^0.2.0"
-langchain-community = "^0.2.0"
+#langchain = "^0.2.0"
+#langchain-community = "^0.2.0"
 sentence-transformers = "^3.0.0"
 huggingface-hub = "^0.23.0"
 torch = "^2.8"

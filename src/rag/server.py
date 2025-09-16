@@ -96,22 +96,8 @@ def rag(query: dict):
 
     return StreamingResponse(gen(), media_type="text/plain; charset=utf-8")
 
-#@app.post("/rag")
-#def rag(query: dict):
-#    q = query["q"]
-#    hits = S.retriever.search(q)
-#    print(hits)
-#    # prompt = build_prompt(q, hits)
-#    prompt = q
-#    # Stream für perceived latency
-#    def gen() -> Iterable[bytes]:
-#        for tok in S.llm.chat_stream(prompt, max_tokens=256, temperature=0.2):
-#            yield tok.encode("utf-8")
-#    return StreamingResponse(gen(), media_type="text/plain")
 
-
-
-# server.py
+# no streaming 
 @app.post("/rag_once")
 def rag_once(query: dict):
     q = query["q"]
