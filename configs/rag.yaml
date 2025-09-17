@@ -11,8 +11,8 @@ llm:
   temperature: 0.7 # 0.2                              # lower = more deterministic
   top_p: 0.9
   repeat_penalty: 1.1                           # prevents loops
-  max_tokens: 80  #256                               # tokens to generate
-  stop: ["</s>", "<|endoftext|>"]               # common stop tokens (family-specific ones come from template)
+  max_tokens: 512 #80  #256                               # tokens to generate
+  # stop: ["</s>", "<|endoftext|>"]               # common stop tokens (family-specific ones come from template)
   use_mmap: true
   use_mlock: true
 

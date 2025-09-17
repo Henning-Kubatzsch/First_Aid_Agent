@@ -73,3 +73,8 @@ def test_pipeline_once_minimal(client):
     ans = r.json()["answer"].lower()
     # minimaler, aber aussagekräftiger Check
     assert "bandage" in ans or "112" in ans
+
+def test_health(client):
+    r = client.get("/health")
+    assert r.status_code == 200
+    assert r.json() == {"ok": True}

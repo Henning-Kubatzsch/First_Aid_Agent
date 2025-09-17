@@ -1,113 +1,131 @@
 # src/rag/server.py
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from typing import Iterable
 import yaml
 from contextlib import asynccontextmanager
+import logging, gc
 
 from rag.generator import LocalLLM, LLMConfig
 from rag.embed import SBertEmbeddings
 from rag.indexer import HnswIndex
 from rag.retriever import Retriever
-# from rag.prompt import build_prompt  # deine baseline-Funktion
 
+log = logging.getLogger(__name__)
 
-
+# --- Global state container (simple singleton) ---
 class State:
     llm: LocalLLM | None = None
     embedder: SBertEmbeddings | None = None
     index: HnswIndex | None = None
     retriever: Retriever | None = None
 
+S = State()
+yaml_path = "configs/rag.yaml"
+
+
 def load_llm_config(path: str) -> LLMConfig:
-    """Read YAML and construct LLMConfig."""
+    """Read YAML config file and construct LLMConfig."""
     with open(path, "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
     llm_cfg = cfg.get("llm", {})
     return LLMConfig(**llm_cfg)
 
-S = State()
 
-yaml_path = "configs/rag.yaml"
-
+# --- Lifecycle manager: startup + teardown ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    #_startup()
-    # 1) LLM warm 
-    cfg = load_llm_config(yaml_path)
+    try:
+        # --- Startup: initialize services ---
+        cfg = load_llm_config(yaml_path)
+        S.llm = LocalLLM(cfg)
+        S.embedder = SBertEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            device="cpu",  # use "mps" only if stable on your machine
+        )
+        S.index = HnswIndex()
+        S.index.load("data/index")
+        S.retriever = Retriever(S.embedder, S.index, k=5)
+        log.info("Warmup complete, server ready.")
+        yield  # <-- server runs between startup and shutdown
+    finally:
+        # --- Shutdown: release resources cleanly ---
+        try:
+            if getattr(S.llm, "close", None):
+                S.llm.close()  # e.g., HTTP sessions, background threads
+        except Exception:
+            log.exception("LLM close failed")
+        try:
+            if getattr(S.index, "close", None):
+                S.index.close()  # e.g., memory-mapped index files
+        except Exception:
+            log.exception("Index close failed")
+        # Drop references so GC can free memory (important on reloads/workers)
+        S.retriever = None
+        S.index = None
+        S.embedder = None
+        S.llm = None
+        gc.collect()  # force GC – optional, helps with memory fragmentation
+        log.info("Teardown complete.")
 
-    S.llm = LocalLLM(cfg)
 
-    # 2) Embedder warm (CPU zuerst; MPS optional testen)
-    S.embedder = SBertEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2",
-        device="cpu",  # oder "mps" – s.u.
-    )
-    # 3) Index warm
-    S.index = HnswIndex()
-    S.index.load("data/index")
-
-    # 4) Retriever
-    S.retriever = Retriever(S.embedder, S.index, k=5)
-    yield
-    #_shutdown()
-
-
-#app.add_event_handler("startup", _startup)
-#app.add_event_handler("shutdown", _shutdown)
-
+# --- FastAPI app ---
 app = FastAPI(lifespan=lifespan)
 
-# method to check if the server is running
 @app.get("/health")
 def health():
+    """Simple health check endpoint."""
     return {"ok": True}
+
 
 @app.post("/rag")
 def rag(query: dict):
+    """Streaming RAG endpoint."""
+    if not (S.llm and S.retriever):
+        raise HTTPException(503, "Service not ready")
     q = query["q"]
-
-    # 1) Retrieve
+    # 1) Retrieve documents
     hits = S.retriever.search(q)
-
-    # 2) Kontext bauen (kurz halten!)
+    # 2) Build compact context
     context = "\n\n".join(f"[{i+1}] {h['text']}" for i, h in enumerate(hits))
     system = (
         "You are a concise, ERC-aligned training assistant. "
         "Answer with short, safe, step-by-step instructions and cite [1], [2] as needed."
     )
     user = f"Context:\n{context}\n\nQuestion:\n{q}"
-
-    # 3) Messages korrekt aufbauen
+    # 3) Construct chat messages
     msgs = S.llm.make_messages(user=user, system=system)
-
-    # 4) Streaming-Generator mit Fehlerfang
+    # 4) Streaming generator with error handling
     def gen() -> Iterable[bytes]:
         try:
             for tok in S.llm.chat_stream(
-                msgs, max_tokens=256, temperature=0.2
+                msgs, max_tokens=1024, temperature=0.2
             ):
-                # einzelne Tokens rausreichen
                 yield tok.encode("utf-8")
         except Exception as e:
-            # Fehler sauber signalisieren statt abrupt zu schließen
+            # Return error in the stream instead of closing abruptly
             err = f"\n\n[stream-error] {type(e).__name__}: {e}\n"
             yield err.encode("utf-8")
-
     return StreamingResponse(gen(), media_type="text/plain; charset=utf-8")
 
 
-# no streaming 
 @app.post("/rag_once")
 def rag_once(query: dict):
+    """Non-streaming RAG endpoint (single-shot)."""
+    if not (S.llm and S.retriever):
+        raise HTTPException(503, "Service not ready")
+
     q = query["q"]
     hits = S.retriever.search(q)
+
     msgs = S.llm.make_messages(
-        user=f"Context:\n" + "\n\n".join(f"[{i+1}] {d['text']}" for i,d in enumerate(hits))
-             + f"\n\nQuestion:\n{q}",
+        user=(
+            "Context:\n"
+            + "\n\n".join(f"[{i+1}] {d['text']}" for i, d in enumerate(hits))
+            + f"\n\nQuestion:\n{q}"
+        ),
         system="You are a concise, ERC-aligned training assistant.",
     )
+
     out = S.llm.chat(msgs, max_tokens=256, temperature=0.2)
     return {"answer": out}
-
-

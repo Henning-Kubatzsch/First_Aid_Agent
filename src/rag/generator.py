@@ -63,8 +63,9 @@ def family_to_chat_format_and_stops(family: str) -> Dict[str, Any]:
     f = family.lower()
     if f in ("qwen", "qwen2", "qwen2.5"):
         # If your GGUF is Qwen2.x, "qwen2" chat_format also works.
-        return {"chat_format": "qwen", "extra_stops": ["<|im_end|>","\n\n","\n- ","\n1. ","\n•","<|endoftext|>"]}
-    
+        # this statement makes answers very short and just cuts them off
+        # return {"chat_format": "qwen", "extra_stops": ["<|im_end|>","\n\n","\n- ","\n1. ","\n•","<|endoftext|>"]}
+        return {"chat_format": "qwen", "extra_stops": ["<|im_end|>"]}
     if f in ("llama3", "llama-3"):
         return {"chat_format": "llama-3", "extra_stops": ["<|eot_id|>", "<|end_of_text|>"]}
     if f in ("phi3", "phi-3", "phi3-mini"):
