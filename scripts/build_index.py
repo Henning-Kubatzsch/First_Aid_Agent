@@ -39,7 +39,11 @@ def build_erc_index(
     metas: List[Dict[str, Any]] = []
 
     # Store index header in the first meta row for reload
-    header_written = False
+    header_written = False  
+
+    print("="*20)
+    print(len(docs), "documents to index")
+    print("="*20)
 
     for d in docs:
         chunks = chunker.split(d["text"], meta={"source": d["source"]})

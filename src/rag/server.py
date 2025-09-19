@@ -86,6 +86,10 @@ def rag(query: dict):
     # 1) Retrieve
     hits = S.retriever.search(q)
 
+    print("="*20)
+    print(hits)
+    print("="*20)
+
     # 2) Prompts bauen
     opts = PromptOptions(language="en", style="steps", max_context_chars=4000, cite=True)
     system, user = build_prompts(q, hits, opts)

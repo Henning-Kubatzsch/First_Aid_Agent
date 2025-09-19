@@ -176,7 +176,12 @@ curl -N -X POST http://127.0.0.1:8000/rag \
 | `-H "Content-Type: application/json"`                            | **Set request header**.                                | Tells the server the body is JSON.                                   |
 | `-d '{"q": "What should I do next for an unresponsive adult?"}'` | **Request body (data)**.                               | Provides the input (`q`) that your RAG system should answer.         |
 
+shorter way
 
+```bash
+curl --json '{"q":"What to do when arriving at an accident?"}' http://127.0.0.1:8000/rag
+
+```
 
 ---
 

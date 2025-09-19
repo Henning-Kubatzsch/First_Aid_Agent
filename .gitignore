@@ -210,6 +210,4 @@ __marimo__/
 /models
 
 # Local indexes, embeddings
-data/indexes/
-data/embeddings/
-
+data/
